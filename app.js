@@ -26,13 +26,22 @@
             return {
                 restrict: 'E',
                 transclude: true,
-                scope: {},
+                scope: {
+                    type: '@'
+                },
                 templateUrl: 'tabset.html',
                 bindToController: true,
                 controllerAs: 'tabset',
                 controller: function () {
                     var self = this;
                     self.tabs = [];
+                    self.classes = {};
+
+                    if (self.type === 'pills') {
+                        self.classes['nav-pills'] = true;
+                    } else{
+                        self.classes['nav-tabs'] = true
+                    }
 
                     self.addTab = function addTab(tab) {
                         self.tabs.push(tab);
@@ -43,7 +52,9 @@
                     };
 
                     self.select = function (selectedTab) {
-                        if (selectedTab) {return}
+                        if (selectedTab.disabled) {
+                            return
+                        }
 
                         angular.forEach(self.tabs, function (tab) {
                             if (tab.active && tab !== selectedTab) {
